@@ -9,6 +9,30 @@
 
 // budget controller all the business logic and methods goes here
 var budgetController = (function(){
+
+    var income = function(id,desc,value){
+        this.ID = id;
+        this.description = desc;
+        this.value = value;
+    };
+    
+    var expense = function(id,desc,value){
+        this.ID = id;
+        this.description = desc,
+        this.value = value;
+    };
+    
+    var data = {
+        allItems:{
+            inc: [],
+            exp: []
+        },
+        total:{
+            exp:0,
+            inc:0
+        },
+        totalBudget: 0
+    }
     
 })();
 
