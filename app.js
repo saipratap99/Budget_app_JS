@@ -10,18 +10,21 @@
 // budget controller all the business logic and methods goes here
 var budgetController = (function(){
 
-    var income = function(id,desc,value){
+    // function constructors to create multiple similar objects
+
+    var Income = function(id,desc,value){
         this.ID = id;
         this.description = desc;
         this.value = value;
     };
     
-    var expense = function(id,desc,value){
+    var Expense = function(id,desc,value){
         this.ID = id;
         this.description = desc,
         this.value = value;
     };
     
+    // data structure to store all items and total budget
     var data = {
         allItems:{
             inc: [],
@@ -32,6 +35,27 @@ var budgetController = (function(){
             inc:0
         },
         totalBudget: 0
+    }
+
+    return {
+        addItem: function(type,desc,value){
+            var newItem,id;
+
+            // set id for each item in the data 
+            if(data.allItems[type].length > 0)
+            id = data.allItems[type][data.allItems[type].length-1].ID + 1;
+            else
+            id = 0;
+
+            if(type === 'inc'){
+                newItem = new Income(id,desc,value);
+            }else{
+                newItem = new Expense(id,desc,value);
+            }
+
+            data.allItems[type].push(newItem);
+            return newItem;
+        }
     }
     
 })();
@@ -67,12 +91,13 @@ var controller = (function(budgetCtrl,UICtrl){
     var DOMs = UICtrl.getDOMstrings;
     // all the events goes here
     var allEvents = function(){
+        var input,newItem;
         // 1.Take input from form
-        var input;
         input = UICtrl.getData();
         console.log(input);
         // 2.Add item in data
-
+        newItem = budgetCtrl.addItem(input.type,input.description,input.value);
+        console.log(newItem);
         // 3.Show the data in UI
     }  
     // mouse cick event
