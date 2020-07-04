@@ -236,6 +236,7 @@ var controller = (function(budgetCtrl,UICtrl){
             // 2.Delete from UI
             UICtrl.deleteItem(getId);
             // 3. Update budget
+            updateBudget();
         }
     }
     
