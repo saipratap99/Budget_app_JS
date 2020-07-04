@@ -9,21 +9,10 @@
 
 // budget controller all the business logic and methods goes here
 var budgetController = (function(){
-    var x = 5;
-    // add and x cannot be accessed outside 
-    function add(a){
-        return x+a;
-    }
-    // publicTest can only be accessed outside of this module
-    return {
-        publicTest: function(b){
-            return add(b);
-        }
-    }
+    
 })();
 
 // using public methods of budget module
-console.log(budgetController.publicTest(8)) // outputs => 13
 
 // UI controller handles all the UI changes 
 // This controller doesnt know aboth other modules available
@@ -34,6 +23,15 @@ var UIController= (function(){
 // Controlling UI and Business logic
 // This controller knows about budget module and UI module
 var controller = (function(budgetCtrl,UICtrl){
-    console.log(budgetCtrl.publicTest(9)); // => 14
+    
+    var allEvents = function(){
+        console.log("Enter and mouse is Working. ");
+    }  
+    
+    document.querySelector('.add__btn').addEventListener('click',allEvents);
+    document.addEventListener('keypress',function(event){
+        if(event.keyCode === 13 || event.which === 13)
+        allEvents();
+    });
 
 })(budgetController,UIController);
