@@ -81,8 +81,8 @@ var UIController= (function(){
             return {
                 type: document.querySelector(DOMstrings.add_type).value,
                 description: document.querySelector(DOMstrings.add_desc).value,
-                value: document.querySelector(DOMstrings.add_value).value
-            }
+                value: parseFloat(document.querySelector(DOMstrings.add_value).value)
+            };
         },
         addItem: function(type,data){
             var html,newHtml,ele;
@@ -123,17 +123,23 @@ var controller = (function(budgetCtrl,UICtrl){
     // all the events goes here
     var allEvents = function(){
         var input,newItem;
+        
         // 1.Take input from form
         input = UICtrl.getData();
         console.log(input);
-        // 2.Add item in data
-        newItem = budgetCtrl.addItem(input.type,input.description,input.value);
-        console.log(newItem);
-        // 3.Show the data in UI
-        UICtrl.addItem(input.type,newItem);
-        // 4.Clear fields
-        UICtrl.clearFields();
-        
+         
+        if(input.description && input.value && input.value > 0 ){
+            
+            // 2.Add item in data
+            newItem = budgetCtrl.addItem(input.type,input.description,input.value);
+            console.log(newItem);
+            // 3.Show the data in UI
+            UICtrl.addItem(input.type,newItem);
+            // 4.Clear fields
+            UICtrl.clearFields();
+            // 5. Updating the budget
+
+        }    
     }  
     // mouse cick event
     document.querySelector(DOMs.add_btn).addEventListener('click',allEvents);
