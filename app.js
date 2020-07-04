@@ -100,7 +100,11 @@ var UIController= (function(){
         add_value: '.add__value',
         add_btn: '.add__btn',
         inc_list: '.income__list',
-        exp_list: '.expenses__list'
+        exp_list: '.expenses__list',
+        budget: '.budget__value',
+        inc: '.budget__income--value',
+        exp: '.budget__expenses--value',
+        exp_perc: '.budget__expenses--percentage'
     }
     
     return {
@@ -141,7 +145,14 @@ var UIController= (function(){
 
             // focus the description
             fieldsArr[0].focus();   
+        },
+        budgetUI: function(budget){
+            document.querySelector(DOMstrings.budget).textContent = budget.totalBudget;
+            document.querySelector(DOMstrings.inc).textContent = budget.total.inc;
+            document.querySelector(DOMstrings.exp).textContent = budget.total.exp;
+            document.querySelector(DOMstrings.exp_perc).textContent = budget.percentage;
         }
+
     };
 })();
 
@@ -158,6 +169,7 @@ var controller = (function(budgetCtrl,UICtrl){
         budget = budgetCtrl.getBudget();
         console.log(budget);
         // 3. update the budget to UI
+        UICtrl.budgetUI(budget);
     }
     
     
@@ -181,13 +193,29 @@ var controller = (function(budgetCtrl,UICtrl){
             updateBudget();
         }    
     }  
-    // mouse cick event
-    document.querySelector(DOMs.add_btn).addEventListener('click',allEvents);
-    // key press on anywhere in the documents
-    document.addEventListener('keypress',function(event){
-        // key must be enter key or return key
-        if(event.keyCode === 13 || event.which === 13)
-        allEvents();
+    var setEventListners = function(){
+        // mouse cick event
+        document.querySelector(DOMs.add_btn).addEventListener('click',allEvents);
+        // key press on anywhere in the documents
+        document.addEventListener('keypress',function(event){
+            // key must be enter key or return key
+            if(event.keyCode === 13 || event.which === 13)
+            allEvents();
     });
-
+    }
+    return {
+        init: function(){
+            updateBudget({
+                totalBudget: 0,
+                total: {
+                    inc: 0,
+                    exp: 0
+                },
+                percentage: 0
+            });
+            setEventListners();
+        }
+    }
 })(budgetController,UIController);
+
+controller.init();
