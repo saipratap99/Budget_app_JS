@@ -69,7 +69,9 @@ var UIController= (function(){
         add_type: '.add__type',
         add_desc: '.add__description',
         add_value: '.add__value',
-        add_btn: '.add__btn'
+        add_btn: '.add__btn',
+        inc_list: '.income__list',
+        exp_list: '.expenses__list'
     }
     
     return {
@@ -81,6 +83,21 @@ var UIController= (function(){
                 description: document.querySelector(DOMstrings.add_desc).value,
                 value: document.querySelector(DOMstrings.add_value).value
             }
+        },
+        addItem: function(type,data){
+            var html,newHtml,ele;
+            if(type === 'inc'){
+                ele = DOMstrings.inc_list;
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%desc%</div><div class="right clearfix"><div class="item__value">+ %value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+            else{
+                ele = DOMstrings.exp_list;
+                html = '<div class="item clearfix" id="expense-%id%"> <div class="item__description">%desc%</div><div class="right clearfix"><div class="item__value">- %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+
+            newHtml = html.replace('%id%',data.ID).replace('%desc%',data.description).replace('%value%',data.value);
+            
+            document.querySelector(ele).insertAdjacentHTML('beforeend',newHtml);
         }
     };
 })();
@@ -99,6 +116,8 @@ var controller = (function(budgetCtrl,UICtrl){
         newItem = budgetCtrl.addItem(input.type,input.description,input.value);
         console.log(newItem);
         // 3.Show the data in UI
+        UICtrl.addItem(input.type,newItem);
+        
     }  
     // mouse cick event
     document.querySelector(DOMs.add_btn).addEventListener('click',allEvents);
