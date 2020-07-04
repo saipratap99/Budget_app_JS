@@ -98,6 +98,20 @@ var UIController= (function(){
             newHtml = html.replace('%id%',data.ID).replace('%desc%',data.description).replace('%value%',data.value);
             
             document.querySelector(ele).insertAdjacentHTML('beforeend',newHtml);
+        },
+        clearFields: function(){
+            var fields,fieldsArr;
+            // select all input fields and stores as list
+            fields = document.querySelectorAll(DOMstrings.add_desc + ',' + DOMstrings.add_value);
+            // slice converts to array
+            fieldsArr = Array.prototype.slice.call(fields);
+
+            fieldsArr.forEach(function(curr) {
+                curr.value = '';
+            });
+
+            // focus the description
+            fieldsArr[0].focus();   
         }
     };
 })();
@@ -117,6 +131,8 @@ var controller = (function(budgetCtrl,UICtrl){
         console.log(newItem);
         // 3.Show the data in UI
         UICtrl.addItem(input.type,newItem);
+        // 4.Clear fields
+        UICtrl.clearFields();
         
     }  
     // mouse cick event
