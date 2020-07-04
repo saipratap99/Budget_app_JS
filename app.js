@@ -34,7 +34,16 @@ var budgetController = (function(){
             exp:0,
             inc:0
         },
-        totalBudget: 0
+        totalBudget: 0,
+        percentage: -1
+    }
+
+    var calTotal = function(type){
+        var sum = 0;
+        data.allItems[type].forEach(function(curr){
+            sum += curr.value;
+        });
+        data.total[type] = sum;
     }
 
     return {
@@ -55,6 +64,26 @@ var budgetController = (function(){
 
             data.allItems[type].push(newItem);
             return newItem;
+        },
+        calBudget: function(){
+            calTotal('inc');
+            calTotal('exp');
+            // budget = income - expenses
+            data.totalBudget = data.total.inc - data.total.exp;
+            if(data.total.inc > 0){
+                data.percentage = Math.round((data.total.exp/data.total.inc)*100);
+            }
+            else{
+                percentage = -1;
+            }    
+        },
+
+        getBudget: function(){
+            return {
+                totalBudget: data.totalBudget,
+                total: data.total,
+                percentage: data.percentage
+            }
         }
     }
     
@@ -120,14 +149,25 @@ var UIController= (function(){
 // This controller knows about budget module and UI module
 var controller = (function(budgetCtrl,UICtrl){
     var DOMs = UICtrl.getDOMstrings;
+    
+    var updateBudget = function(){
+        var budget;
+        // 1. calculate the budget 
+        budgetCtrl.calBudget();
+        // 2.get the budget
+        budget = budgetCtrl.getBudget();
+        console.log(budget);
+        // 3. update the budget to UI
+    }
+    
+    
     // all the events goes here
     var allEvents = function(){
-        var input,newItem;
-        
+        var input,newItem; 
         // 1.Take input from form
         input = UICtrl.getData();
         console.log(input);
-         
+        
         if(input.description && input.value && input.value > 0 ){
             
             // 2.Add item in data
@@ -138,7 +178,7 @@ var controller = (function(budgetCtrl,UICtrl){
             // 4.Clear fields
             UICtrl.clearFields();
             // 5. Updating the budget
-
+            updateBudget();
         }    
     }  
     // mouse cick event
