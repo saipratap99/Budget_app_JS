@@ -23,7 +23,15 @@ var budgetController = (function(){
         this.description = desc,
         this.value = value;
     };
-    
+
+    Expense.prototype.calPercentage = function(inc){
+
+        if(inc > 0)
+        this.percentage = Math.round((this.value/inc)*100);
+        else
+        this.percentage = -1;
+    };
+
     // data structure to store all items and total budget
     var data = {
         allItems:{
@@ -94,6 +102,19 @@ var budgetController = (function(){
             index = ids.indexOf(id);
             data.allItems[type].splice(index,1);
         },
+        calculatePercentages: function(){
+            data.allItems.exp.forEach(function(curr){
+               curr.calPercentage(data.total.inc);
+            });    
+        },
+
+        getPerc: function(){
+            var percentages = data.allItems.exp.map(function(curr){
+                return curr.percentage;
+            })
+            return percentages;
+        },
+
         test: function(){
             console.log(data);
         }
@@ -188,6 +209,14 @@ var controller = (function(budgetCtrl,UICtrl){
         UICtrl.budgetUI(budget);
     }
     
+    var updatePercentages = function(){
+        // 1. calculating percentages in budegt ctrler
+        budgetCtrl.calculatePercentages();
+        // 2.Geting percentages from budget controller
+        var percentages = budgetCtrl.getPerc();
+        // 3. Updating percentages in UI
+        console.log(percentages);
+    }
     
     // all the events goes here
     var allEvents = function(){
@@ -205,6 +234,8 @@ var controller = (function(budgetCtrl,UICtrl){
             UICtrl.clearFields();
             // 5. Updating the budget
             updateBudget();
+            // 6. Updating percentages
+            updatePercentages();
         }    
     }  
 
@@ -237,6 +268,8 @@ var controller = (function(budgetCtrl,UICtrl){
             UICtrl.deleteItem(getId);
             // 3. Update budget
             updateBudget();
+            // 4. updating percentages
+            updatePercentages();
         }
     }
     
