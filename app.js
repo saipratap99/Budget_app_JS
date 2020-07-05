@@ -138,7 +138,8 @@ var UIController= (function(){
         inc: '.budget__income--value',
         exp: '.budget__expenses--value',
         exp_perc: '.budget__expenses--percentage',
-        container: '.container'
+        container: '.container',
+        percentages: '.item__percentage'
     }
     
     return {
@@ -184,7 +185,26 @@ var UIController= (function(){
             document.querySelector(DOMstrings.budget).textContent = budget.totalBudget;
             document.querySelector(DOMstrings.inc).textContent = budget.total.inc;
             document.querySelector(DOMstrings.exp).textContent = budget.total.exp;
+            if (budget.percentage > 0)
             document.querySelector(DOMstrings.exp_perc).textContent = budget.percentage + '%';
+            else
+            document.querySelector(DOMstrings.exp_perc).textContent = '--'; 
+        },
+
+        displayPercentages: function(percentages){
+
+            var fields = document.querySelectorAll(DOMstrings.percentages);
+            var nodeListforEach = function(list,callback){
+                for(var i=0;i<list.length;i++)
+                callback(list[i],i)
+            };
+
+            nodeListforEach(fields,function(curr,index){
+                if (percentages[index] > 0 )
+                curr.textContent = percentages[index] + '%';
+                else
+                curr.textContent = '--';
+            })
         },
         deleteItem: function(selID){
             el = document.getElementById(selID)
@@ -215,7 +235,7 @@ var controller = (function(budgetCtrl,UICtrl){
         // 2.Geting percentages from budget controller
         var percentages = budgetCtrl.getPerc();
         // 3. Updating percentages in UI
-        console.log(percentages);
+        UICtrl.displayPercentages(percentages);
     }
     
     // all the events goes here
